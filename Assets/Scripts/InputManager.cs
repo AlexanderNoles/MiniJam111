@@ -6,7 +6,7 @@ using System;
 public class InputManager : MonoBehaviour
 {
     private static readonly KeyCode jumpCode = KeyCode.W;
-    private static readonly KeyCode dashCode = KeyCode.LeftShift;
+    private static readonly KeyCode dashCode = KeyCode.Space;
     private static readonly int fireKey = 0;
 
     public static Vector2 MovementInput(){
