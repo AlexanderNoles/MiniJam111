@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour
 {
     private static readonly KeyCode jumpCode = KeyCode.W;
     private static readonly KeyCode dashCode = KeyCode.Space;
+    private static readonly KeyCode altDashCode = KeyCode.LeftShift;
     private static readonly int fireKey = 0;
 
     public static Vector2 MovementInput(){
@@ -23,6 +24,6 @@ public class InputManager : MonoBehaviour
     }
 
     public static bool DashKeyPressed(){
-        return Input.GetKey(dashCode);
+        return Input.GetKey(dashCode) || Input.GetKey(altDashCode);
     }
 }
