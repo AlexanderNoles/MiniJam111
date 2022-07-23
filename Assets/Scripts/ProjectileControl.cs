@@ -72,6 +72,7 @@ public class ProjectileControl : MonoBehaviour
         else if(collision.CompareTag("Enemy"))
         {
             collision.SendMessage("Attacked", SendMessageOptions.DontRequireReceiver);
+            DestroyProjectile();
         }
         else if (collision.gameObject.layer == 8)
         {

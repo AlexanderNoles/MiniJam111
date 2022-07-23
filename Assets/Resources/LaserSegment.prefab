@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 2019770268226666783}
   - component: {fileID: 2518934846430125313}
   - component: {fileID: 5431556083304008717}
-  - component: {fileID: 4154668408609813892}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LaserSegment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,18 +122,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4154668408609813892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2019770268226666780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9a6b3d912874bd48a7c1632cc8af5da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2591352384356605618
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,7 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2721683569669476710}
   - component: {fileID: 5217291858896901821}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: New Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -21,6 +21,10 @@ public class GunControl : MonoBehaviour
     }
     [Header("Gun Info")]
     public Guns currentGun;
+    public static Guns getCurrentGun()
+    {
+        return _instance.currentGun;
+    }
     [Serializable]
     public struct StandardGunInfo
     {
@@ -45,6 +49,14 @@ public class GunControl : MonoBehaviour
         return currentGunInfo.accentColor;
     }
     private float currentAmmo;
+    public static float getCurrentAmmoPercentage()
+    {
+        return _instance.currentAmmo / currentGunInfo.ammo;
+    }
+    public static float getCurrentAmmoDifference()
+    {
+        return currentGunInfo.ammo - _instance.currentAmmo;
+    }
     private float currentTimeBetweenShots;
 
     private static float timeBetweenGunSwitch = 0.6f;
@@ -61,6 +73,10 @@ public class GunControl : MonoBehaviour
     public int maxNumberOfBounces = 5;
     public LayerMask thingsThatCanBeHit;
     public Transform laserHolder;
+
+    private float timeTillCanDamagePlayer = 0.05f;
+    private float timeLeftTillDamagePlayer = 0.05f;
+
 
     [Header("BlowBack")]
     public float knockbackForce = 500.0f;
@@ -124,6 +140,8 @@ public class GunControl : MonoBehaviour
 
 
         onGunChange.Invoke();
+
+        AmmoUIManagment.OnGunUpdate();
     }
 
     void Update()
@@ -137,6 +155,8 @@ public class GunControl : MonoBehaviour
         if(currentGun == Guns.Laser)
         {
             actualGun.right = (fireEmpty.position + GetToMouseVector().normalized) - fireEmpty.position;
+
+            LaserDamageCheck();
         }
         else
         {
@@ -190,6 +210,28 @@ public class GunControl : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
+    }
+
+    private void LaserDamageCheck()
+    {
+        foreach (LaserDamageControl ldc in LaserDamageControl.scriptList)
+        {
+            if (ldc.canDamagePlayer)
+            {
+                if (timeLeftTillDamagePlayer > 0)
+                {
+                    timeLeftTillDamagePlayer -= Time.deltaTime;
+                }
+                else
+                {
+                    PlayerManagment.TakeDamage(1.0f, Vector3.zero);
+                    timeLeftTillDamagePlayer = timeTillCanDamagePlayer;
+                }
+                return;
+            }
+        }
+
+        timeLeftTillDamagePlayer = timeTillCanDamagePlayer;
     }
 
     private void Fire()
@@ -268,5 +310,7 @@ public class GunControl : MonoBehaviour
             ((GameObject)Instantiate(Resources.Load("BulletCasing"), transform.position, Quaternion.identity)).GetComponent<Rigidbody2D>().velocity = new Vector2(fireEmpty.right.x,2.0f);
             currentAmmo -= currentGunInfo.ammoPerShot;
         }
+
+        AmmoUIManagment.OnFire();
     }
 }

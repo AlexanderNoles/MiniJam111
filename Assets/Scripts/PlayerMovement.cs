@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Ground Movement")]
     public float walkSpeed = 5f;
-    public float sprintSpeed = 10f;
+    //public float sprintSpeed = 10f;
     public float crouchSpeed = 1f;
     public float normalDrag = 5f;
     private float currentMoveSpeed = 0f;
@@ -30,8 +30,13 @@ public class PlayerMovement : MonoBehaviour
     public int maxAmountOfJumps = 2;
     private int currentAmountOfJumps;
 
+    [Header("Dash Settings")]
+    public float timeBetweenDashes = 0.5f;
+    private float timeTillNextDash;
+
     [Header("Animation")]
     public Transform PlayerSprite;
+    private SpriteRenderer sr;
 
     bool grounded(){
         return Physics2D.Raycast(transform.position, Vector2.down, height/2, ground);
@@ -41,12 +46,29 @@ public class PlayerMovement : MonoBehaviour
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
         _instance = this;
+        sr = PlayerSprite.GetComponent<SpriteRenderer>();
     }
 
     private void Update() {
+
         inputThisFrame = InputManager.MovementInput();
         SpeedControl();
         StateControl();
+
+        if(inputThisFrame.x != 0)
+        {
+            sr.flipX = inputThisFrame.x < 0;
+        }
+
+        if(InputManager.DashKeyPressed() && timeTillNextDash <= 0)
+        {
+            Dash(inputThisFrame);
+            timeTillNextDash = timeBetweenDashes;
+        }
+        else
+        {
+            timeTillNextDash -= Time.deltaTime;
+        }
 
         if(InputManager.JumpButtonPressed() && currentAmountOfJumps >= 1){
             Jump();
@@ -85,14 +107,29 @@ public class PlayerMovement : MonoBehaviour
         currentAmountOfJumps--;
     }
 
+    /// <summary>
+    /// Dash 
+    /// </summary>
+    private void Dash(Vector2 inputThisFrame)
+    {
+        StartCoroutine(nameof(DashCo),inputThisFrame);
+    }
+
+    IEnumerator DashCo(Vector2 inputThisFrame)
+    {
+        rb.AddForce(1.2f * Vector2.up, ForceMode2D.Impulse);
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        rb.AddForce(3.0f * inputThisFrame.x * Vector2.right, ForceMode2D.Impulse);
+        PlayerManagment.timeLeftTillDamage = 0.3f;
+        PlayerManagment.invincibilityFromDash = true;
+    }
+
     private void StateControl(){
         if(grounded()){
-            if(InputManager.SprintButtonPressed()){
-                currentMoveSpeed = sprintSpeed;
-            }
-            else{
-                currentMoveSpeed = walkSpeed;
-            }
+            currentMoveSpeed = walkSpeed;
             rb.drag = normalDrag;
             rb.gravityScale = 1f;
             if(!groundedLastFrame){

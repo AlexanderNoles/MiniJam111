@@ -8,6 +8,7 @@ public class KillCircle : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerManagment.levelLost) return;
         if ((PlayerMovement._instance.transform.position - transform.position).sqrMagnitude > radius * radius)
         {
             PlayerManagment.TakeDamage(1000000);

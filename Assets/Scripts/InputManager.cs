@@ -6,7 +6,7 @@ using System;
 public class InputManager : MonoBehaviour
 {
     private static readonly KeyCode jumpCode = KeyCode.W;
-    private static readonly KeyCode sprintCode = KeyCode.C;
+    private static readonly KeyCode dashCode = KeyCode.LeftShift;
     private static readonly int fireKey = 0;
 
     public static Vector2 MovementInput(){
@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour
         return Input.GetMouseButton(fireKey);
     }
 
-    public static bool SprintButtonPressed(){
-        return Input.GetKey(sprintCode);
+    public static bool DashKeyPressed(){
+        return Input.GetKey(dashCode);
     }
 }
